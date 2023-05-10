@@ -9,10 +9,9 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import CommentIcon from '@mui/icons-material/Comment';
-import { makeStyles } from '@mui/styles';
+import CommentIcon from "@mui/icons-material/Comment";
+import { makeStyles } from "@mui/styles";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -25,11 +24,11 @@ const ExpandMore = styled((props) => {
 }));
 
 const useStyles = makeStyles((theme) => ({
-    link : {
-        textDecoration : "none",
-        boxShadow : "none",
-        color : "white"
-    }
+  link: {
+    textDecoration: "none",
+    boxShadow: "none",
+    color: "white",
+  },
 }));
 
 function Post(props) {
@@ -48,15 +47,19 @@ function Post(props) {
   };
 
   return (
-    <Card sx={{ width: 800,
-    textAlign:"left" }}>
+    <Card sx={{ width: 800, margin: 12, textAlign: "left" }}>
       <CardHeader
         avatar={
-        <Link className={classes.link} to={{pathname : 'users/' + userId}}>
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {userName.charAt(0).toUpperCase()}
-          </Avatar>
-        </Link>
+          <Link className={classes.link} to={{ pathname: "users/" + userId }}>
+            <Avatar
+              sx={{
+                background: "linear-gradient(45deg,#2196F3 30%,#21CBF3 90%)",
+              }}
+              aria-label="recipe"
+            >
+              {userName.charAt(0).toUpperCase()}
+            </Avatar>
+          </Link>
         }
         title={title}
       />
@@ -66,12 +69,8 @@ function Post(props) {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton 
-        onClick={handleLike}
-        aria-label="add to favorites">
-          <FavoriteIcon
-          style={liked? {color:"red"} :null}
-          />
+        <IconButton onClick={handleLike} aria-label="add to favorites">
+          <FavoriteIcon style={liked ? { color: "red" } : null} />
         </IconButton>
         <ExpandMore
           expand={expanded}

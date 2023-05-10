@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import Post from "../Post/Post";
 import { makeStyles } from "@mui/styles";
 import Container from "@mui/material/Container";
+import PostForm from "../Post/PostForm";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    //display: "flex",
+    display: "flex",
     flexWrap: "wrap",
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#cfe8fc",
-    height: "100vh",
+    justifyContent: "center",
+    backgroundColor: "#f0f5ff",
   },
 }));
 
@@ -21,7 +21,7 @@ function Home() {
 
   const classes = useStyles();
 
-  useEffect(() => {
+  const refreshPosts = () => {
     fetch("/posts")
       .then((res) => res.json())
       .then(
@@ -34,7 +34,11 @@ function Home() {
           setError(error);
         }
       );
-  }, []);
+  };
+
+  useEffect(() => {
+    refreshPosts();
+  }, [postList]);
 
   if (error) {
     return <div>Error !!!</div>;
@@ -42,15 +46,23 @@ function Home() {
     return <div>Loading...</div>;
   } else {
     return (
-      <Container
-        fixed
-        className={classes.container}
-        style={{ display: "flex" }}
-      >
-        {postList.map((post) => (
-          <Post userId={post.userId} userName={post.userName} title={post.title} text={post.text}></Post>
-        ))}
-      </Container>
+      <div className={classes.container}>
+        <Container flex>
+          <PostForm
+            userId={1}
+            userName={"asdasd"}
+            refreshPosts={refreshPosts}
+          ></PostForm>
+          {postList.map((post) => (
+            <Post
+              userId={post.userId}
+              userName={post.userName}
+              title={post.title}
+              text={post.text}
+            ></Post>
+          ))}
+        </Container>
+      </div>
     );
   }
 }
