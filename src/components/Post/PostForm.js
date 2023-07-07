@@ -9,6 +9,10 @@ import { makeStyles } from "@mui/styles";
 import { Button, InputAdornment, OutlinedInput, Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: "none",
@@ -67,15 +71,11 @@ function PostForm(props) {
     setIsSent(false);
   };
 
-  const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
-
   return (
     <div>
-      <Snackbar open={isSent} autoHideDuration={1200} onClose={handleClose}>
+      <Snackbar open={isSent} autoHideDuration={7000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          This is a success message!
+          Your post is sent!
         </Alert>
       </Snackbar>
       <Card sx={{ width: 800, margin: 12, textAlign: "left" }}>

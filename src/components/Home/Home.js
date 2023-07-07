@@ -55,10 +55,12 @@ function Home() {
           ></PostForm>
           {postList.map((post) => (
             <Post
+              postId={post.id}
               userId={post.userId}
               userName={post.userName}
               title={post.title}
               text={post.text}
+              likes={post.postLikes}
             ></Post>
           ))}
         </Container>
