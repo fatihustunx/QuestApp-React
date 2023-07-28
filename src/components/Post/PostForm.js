@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { makeStyles } from "@mui/styles";
 import { Button, InputAdornment, OutlinedInput, Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
+import { PostWithAuth } from "../../services/HttpService";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -30,17 +31,10 @@ function PostForm(props) {
   const classes = useStyles();
 
   const savePost = () => {
-    fetch("/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("tokenKey"),
-      },
-      body: JSON.stringify({
-        userId: userId,
-        title: title,
-        text: text,
-      }),
+    PostWithAuth("/posts",{
+      userId: userId,
+      title: title,
+      text: text,
     })
       .then((res) => res.json())
       .catch((err) => console.log("error"));

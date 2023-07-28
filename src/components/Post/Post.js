@@ -15,6 +15,7 @@ import { makeStyles } from "@mui/styles";
 import { Container } from "@mui/material";
 import Comment from "../Comment/Comment";
 import CommentForm from "../Comment/CommentForm";
+import { DeleteWithAuth, PostWithAuth } from "../../services/HttpService";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -43,6 +44,7 @@ function Post(props) {
   const [commentList, setCommentList] = useState([]);
   const [likeCount, setLikedCount] = useState(likes.length);
   const [likeId, setLikeId] = useState(null);
+  const [refresh,setRefresh] = useState(false);
   const isInitialMount = useRef(true);
 
   let disabled = localStorage.getItem("currentUser") == null ? true : false;
@@ -75,6 +77,10 @@ function Post(props) {
     refreshComments();
   };
 
+  const setCommentRefresh = () => {
+    setRefresh(true);
+  }
+
   const refreshComments = () => {
     fetch("/comments?postId=" + postId)
       .then((res) => res.json())
@@ -88,35 +94,28 @@ function Post(props) {
           setError(error);
         }
       );
+
+      setRefresh(false);
   };
 
   const saveLike = () => {
-    fetch("/likes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("tokenKey"),
-      },
-      body: JSON.stringify({
-        postId: postId,
-        userId: localStorage.getItem("currentUser"),
-      }),
+    PostWithAuth("/likes",{
+      postId: postId,
+      userId: localStorage.getItem("currentUser"),
     })
       .then((res) => res.json())
       .catch((err) => console.log("error"));
   };
 
   const deleteLike = () => {
-    fetch("likes/" + likeId, {
-      method: "DELETE",
-      headers: { "Authorization": localStorage.getItem("tokenKey") },
-    }).catch((err) => console.log(err));
+    DeleteWithAuth("likes/" + likeId)
+    .catch((err) => console.log(err));
   };
 
   useEffect(() => {
     if (isInitialMount.current) isInitialMount.current = false;
     else refreshComments();
-  }, [commentList]);
+  }, [refresh]);
 
   useEffect(() => {
     checkLikes();
@@ -189,6 +188,7 @@ function Post(props) {
               userId={localStorage.getItem("currentUser")}
               userName={localStorage.getItem("userName")}
               postId={postId}
+              setCommentRefresh={setCommentRefresh}
             ></CommentForm>
           )}
         </Container>

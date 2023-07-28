@@ -15,6 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
 import Post from "../Post/Post";
 import { TableCell } from "@mui/material";
+import { GetWithAuth } from "../../services/HttpService";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -26,13 +27,7 @@ function PopUp(props) {
   const [post, setPost] = useState();
 
   const getPost = () => {
-    fetch("/posts/" + postId, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("tokenKey"),
-      },
-    })
+    GetWithAuth("/posts/" + postId)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -103,13 +98,7 @@ function UserActivity(props) {
   const [selectedPost, setSelectedPost] = useState(null);
 
   const getActivity = () => {
-    fetch("/users/activity/" + userId, {
-      method: "GET",
-      headers: {
-        "Context-Type": "/application/json",
-        "Authorization": localStorage.getItem("tokenKey"),
-      },
-    })
+    GetWithAuth("/users/activity/" + userId)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -135,9 +124,15 @@ function UserActivity(props) {
 
   return (
     <div>
-      {isOpen? <PopUp isOpen={isOpen} postId={selectedPost} setIsOpen={setIsOpen} /> : "" }
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+      {isOpen ? (
+        <PopUp isOpen={isOpen} postId={selectedPost} setIsOpen={setIsOpen} />
+      ) : (
+        ""
+      )}
+      <Paper sx={{ width: "100%",}}>
+        <TableContainer
+          sx={{ maxHeight: 440, minWidth: 100, maxWidth: 800, marginTop: 20 }}
+        >
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>User Activity</TableRow>
@@ -152,7 +147,7 @@ function UserActivity(props) {
                       tabIndex={-1}
                       key={row.code}
                     >
-                      <TableCell>
+                      <TableCell align="right">
                         {row[3] + " " + row[0] + " your post"}
                       </TableCell>
                     </TableRow>

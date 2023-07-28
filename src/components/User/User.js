@@ -2,19 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Avatar from "../Avatar/Avatar";
 import UserActivity from "./UserActivity";
+import { GetWithAuth } from "../../services/HttpService";
 
 function User() {
   const { userId } = useParams();
   const [user, setUser] = useState();
 
   const getUser = () => {
-    fetch("/users/" + userId, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": localStorage.getItem("tokenKey"),
-      },
-    })
+    GetWithAuth("/users/" + userId)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -32,8 +27,20 @@ function User() {
 
   return (
     <div style={{ display: "flex" }}>
-      {user ? <Avatar avatarId={user.avatarId} /> : ""}
-      <UserActivity userId={userId} />
+      {user ? (
+        <Avatar
+          userId={user.id}
+          avatarId={user.avatarId}
+          userName={user.userName}
+        />
+      ) : (
+        ""
+      )}
+      {localStorage.getItem("currentUser") == userId ? (
+        <UserActivity userId={userId} />
+      ) : (
+        ""
+      )}
     </div>
   );
 }
