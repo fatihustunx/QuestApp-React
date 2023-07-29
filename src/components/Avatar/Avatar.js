@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { PutWithAuth } from "../../services/HttpService";
+import { PutWithAuth, RefreshTokenControl } from "../../services/HttpService";
 
 const style = {
   position: "absolute",
@@ -33,8 +33,23 @@ function Avatar(props) {
   const [selectedValue, setSelectedValue] = React.useState(avatarId);
 
   const saveAvatar = () => {
-    PutWithAuth("/users/", { avatar: selectedValue })
-      .then((res) => res.json())
+    PutWithAuth("/users/" + localStorage.getItem("currentUser"), {
+      avatar: selectedValue,
+    })
+      .then((res) => {
+        if (!res.ok) {
+          RefreshTokenControl()
+            .then((result) => {
+              if (result != undefined) {
+                localStorage.setItem("tokenKey", result.accessToken);
+                saveAvatar();
+              }
+            })
+            .catch((err) => console.log("error"));
+        } else {
+          res.json();
+        }
+      })
       .catch((err) => console.log(err));
   };
 

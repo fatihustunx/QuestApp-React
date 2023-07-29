@@ -129,7 +129,7 @@ function UserActivity(props) {
       ) : (
         ""
       )}
-      <Paper sx={{ width: "100%",}}>
+      <Paper sx={{ width: "100%" }}>
         <TableContainer
           sx={{ maxHeight: 440, minWidth: 100, maxWidth: 800, marginTop: 20 }}
         >

@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {PostWithoutAuth } from "../../services/HttpService";
+import { PostWithoutAuth } from "../../services/HttpService";
 
 function Auth() {
   const [username, setUsername] = useState("");
@@ -23,13 +23,14 @@ function Auth() {
   };
 
   const sendRequest = (path) => {
-    PostWithoutAuth("/auth/" + path,{
+    PostWithoutAuth("/auth/" + path, {
       userName: username,
       password: password,
     })
       .then((res) => res.json())
       .then((result) => {
-        localStorage.setItem("tokenKey", result.message);
+        localStorage.setItem("tokenKey", result.accessToken);
+        localStorage.setItem("refreshKey", result.refreshToken);
         localStorage.setItem("currentUser", result.userId);
         localStorage.setItem("userName", username);
       })

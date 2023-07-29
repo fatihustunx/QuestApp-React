@@ -9,7 +9,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { makeStyles } from "@mui/styles";
 import { Link } from "react-router-dom";
-import { PostWithAuth } from "../../services/HttpService";
+import { PostWithAuth, RefreshTokenControl } from "../../services/HttpService";
 
 const useStyles = makeStyles((theme) => ({
   comment: {
@@ -30,19 +30,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CommentForm(props) {
-  const { userId, userName, postId ,setCommentRefresh} = props;
+  const { userId, userName, postId, setCommentRefresh } = props;
   const [text, setText] = useState("");
 
   const classes = useStyles();
 
   const saveComment = () => {
-    PostWithAuth("/comments",{
+    PostWithAuth("/comments", {
       postId: postId,
       userId: userId,
       text: text,
     })
-      .then((res) => res.json())
-      .catch((err) => console.log("error"));
+      .then((res) => {
+        if (!res.ok) {
+          RefreshTokenControl()
+            .then((result) => {
+              if (result != undefined) {
+                localStorage.setItem("tokenKey", result.accessToken);
+
+                saveComment();
+                setCommentRefresh();
+              }
+            })
+            .catch((err) => console.log("error"));
+        } else {
+          res.json();
+        }
+      })
+      .catch((err) => console.log("error 2"));
   };
 
   const handleChange = (value) => {
@@ -52,6 +67,7 @@ function CommentForm(props) {
   const handleSubmit = () => {
     saveComment();
     setText("");
+
     setCommentRefresh();
   };
 

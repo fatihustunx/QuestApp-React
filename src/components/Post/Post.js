@@ -44,7 +44,7 @@ function Post(props) {
   const [commentList, setCommentList] = useState([]);
   const [likeCount, setLikedCount] = useState(likes.length);
   const [likeId, setLikeId] = useState(null);
-  const [refresh,setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const isInitialMount = useRef(true);
 
   let disabled = localStorage.getItem("currentUser") == null ? true : false;
@@ -64,7 +64,7 @@ function Post(props) {
 
   const checkLikes = () => {
     var likeControl = likes.find(
-      (like) =>  "" + like.userId === localStorage.getItem("currentUser")
+      (like) => "" + like.userId === localStorage.getItem("currentUser")
     );
     if (likeControl != null) {
       setLikeId(likeControl.id);
@@ -79,7 +79,7 @@ function Post(props) {
 
   const setCommentRefresh = () => {
     setRefresh(true);
-  }
+  };
 
   const refreshComments = () => {
     fetch("/comments?postId=" + postId)
@@ -95,11 +95,11 @@ function Post(props) {
         }
       );
 
-      setRefresh(false);
+    setRefresh(false);
   };
 
   const saveLike = () => {
-    PostWithAuth("/likes",{
+    PostWithAuth("/likes", {
       postId: postId,
       userId: localStorage.getItem("currentUser"),
     })
@@ -109,7 +109,8 @@ function Post(props) {
 
   const deleteLike = () => {
     DeleteWithAuth("likes/" + likeId)
-    .catch((err) => console.log(err));
+      .then((res) => res.json())
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
