@@ -43,7 +43,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "https://questapp-wistaster-dev.apps.sandbox-m3.1530.p1.openshiftapps.com/",
+  "now-build": "reat-scripts build && mv build dist",
   "devDependencies": {
     "sass": "^1.62.1"
   }
